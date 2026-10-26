@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#086344">
+<link rel="manifest" href="./manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>SOULYAS DRINKS PRO | Distribution de boissons</title>
+<style>
+:root{
+  --green:#086344;--green2:#0d8058;--mint:#e8f5ee;--bg:#f4f7f5;--ink:#18332a;
+  --muted:#74847d;--line:#e4ebe7;--orange:#f39b35;--red:#d94d4d;--blue:#2878bd;
+  --radius:18px;--shadow:0 5px 20px rgba(20,65,45,.07)
+}
+*{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;background:var(--bg);color:var(--ink)}
+body{padding-bottom:86px} button,input,select{font:inherit} button{cursor:pointer}
+.app{max-width:520px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative}
+.topbar{background:linear-gradient(135deg,#064b35,#0b7752);color:#fff;padding:18px 18px 20px;border-radius:0 0 24px 24px;box-shadow:0 8px 24px #064b351f}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}.brand-mark{width:42px;height:42px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:23px}
+.brand h1{font-size:20px;margin:0;font-weight:800}.brand p{margin:4px 0 0;font-size:11px;color:#d0e9dc}
+.top-actions{display:flex;gap:8px}.icon-btn{border:1px solid #ffffff38;background:#ffffff12;color:#fff;border-radius:12px;width:39px;height:39px;font-size:17px}
+.greeting{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:8px}.greeting h2{font-size:19px;margin:0 0 5px}.greeting p{font-size:12px;color:#d0e9dc;margin:0}
+.day-pill{background:#ffffff1c;border:1px solid #ffffff30;padding:8px 10px;border-radius:12px;font-size:11px;white-space:nowrap}
+.content{padding:16px 14px 20px}.screen{display:none}.screen.active{display:block}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px;gap:8px}
+.section-head h2{font-size:17px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:5px}
+.text-btn{border:0;background:transparent;color:var(--green);font-weight:700;font-size:12px}
+.cart-remove{display:inline-flex;align-items:center;justify-content:center;margin-left:4px;padding:0;width:34px;height:34px;flex:0 0 34px;border:1px solid #f3d4d4;border-radius:10px;background:#fff1f1;color:#c34c4c;line-height:1;transition:background .15s,border-color .15s,transform .15s}.cart-remove span{display:none}.cart-remove:focus-visible{outline:2px solid #c34c4c;outline-offset:2px}
+.cart-remove:active{background:#ffe8e8;border-color:#e9b7b7;transform:scale(.97)}
+.cart-remove svg{width:17px;height:17px;flex:0 0 17px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:17px}
+.metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:var(--shadow)}
+.metric-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted)}
+.metric-icon{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;font-size:17px;background:var(--mint)}
+.metric strong{display:block;font-size:20px;margin-top:12px;letter-spacing:-.4px}.metric small{font-size:10px;color:var(--muted)}
+.metric.warn .metric-icon{background:#fff1df}.metric.blue .metric-icon{background:#e6f2ff}.metric.purple .metric-icon{background:#f1eaff}
+.searchbar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:0 12px;height:44px;border-radius:14px;margin-bottom:12px}
+.searchbar span{font-size:17px;color:var(--muted)}.searchbar input{border:0;outline:0;width:100%;background:transparent;font-size:13px;color:var(--ink)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:0 0 11px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 13px;font-size:11px;color:#52645b}
+.chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.product{transition:transform .15s ease,box-shadow .15s ease;background:#fff;border:1px solid var(--line);border-radius:17px;padding:10px;box-shadow:var(--shadow);min-width:0;position:relative}
+.product-photo{width:100%;height:100%;object-fit:contain;position:relative;z-index:1;background:#fff}.manage-product{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.manage-thumb{width:58px;height:58px;flex:0 0 58px;border-radius:12px;object-fit:cover;background:#f0f5f1}.manage-actions{display:flex;gap:6px}.manage-actions button{padding:7px 9px;font-size:11px}.product-art{height:112px;border-radius:13px;display:grid;place-items:center;position:relative;overflow:hidden;background:linear-gradient(140deg,#f1faf4,#e2f2e9)}
+.product-art:before{content:"";position:absolute;width:95px;height:95px;border-radius:50%;background:#ffffff85;right:-18px;top:-28px}
+.bottle{height:83px;width:36px;border-radius:8px 8px 11px 11px;position:relative;box-shadow:inset -5px 0 7px #0000001c,2px 5px 8px #00000018;z-index:1}
+.bottle:before{content:"";position:absolute;width:15px;height:15px;top:-11px;left:10px;border-radius:4px 4px 1px 1px;background:inherit;filter:brightness(.82)}
+.bottle:after{content:attr(data-label);position:absolute;left:2px;right:2px;top:29px;height:28px;border-radius:4px;background:#fff;color:#234b3b;font-size:7px;font-weight:bold;display:grid;place-items:center;text-align:center;padding:1px}
+.can{height:70px;width:43px;border-radius:8px;background:linear-gradient(90deg,#c7c7c7,#f9f9f9 28%,#ddd 70%,#aaa);z-index:1;position:relative;box-shadow:2px 6px 9px #0002}
+.can:before{content:"";position:absolute;top:4px;left:5px;right:5px;height:5px;background:#888;border-radius:50%}
+.can:after{content:attr(data-label);position:absolute;top:21px;left:0;right:0;padding:5px 1px;background:#d82732;color:white;text-align:center;font-size:7px;font-weight:bold}
+.water{background:linear-gradient(90deg,#9bcdf3,#e9f8ff 30%,#80b9e8 78%,#5797d0)}.cola{background:linear-gradient(90deg,#451b17,#8b211b 40%,#4a1615)}.orange{background:linear-gradient(90deg,#ff9e21,#ffd36b 40%,#ed790e)}.green-bottle{background:linear-gradient(90deg,#0b7045,#3fb36b 42%,#075b37)}.blue-bottle{background:linear-gradient(90deg,#1452a2,#64a8ed 45%,#164b8d)}
+.product-name{font-size:13px;font-weight:800;margin:10px 0 5px}.product-meta{font-size:10px;color:var(--muted);margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:5px}.price{font-size:14px;font-weight:800;color:var(--green)}.unit{font-size:9px;color:var(--muted);margin-top:3px}
+.add-btn{transition:transform .12s ease;}.add-btn:active{transform:scale(.94)}.add-btn{border:0;background:var(--green);color:white;border-radius:11px;width:35px;height:35px;font-size:23px;line-height:1;box-shadow:0 3px 8px #0863442b}
+.stock-tag{position:absolute;top:8px;right:8px;background:#fff;border-radius:7px;padding:4px 6px;font-size:9px;color:var(--green);z-index:2}
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:19px}
+.quick{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 4px;text-align:center;box-shadow:var(--shadow);color:var(--ink)}
+.quick .qicon{display:block;font-size:22px;margin-bottom:7px}.quick span:last-child{font-size:10px;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+.card-title{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:800;margin-bottom:12px}
+.list-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #edf1ee}.list-row:last-child{border-bottom:0}
+.avatar{width:42px;height:42px;flex:0 0 42px;border-radius:13px;background:var(--mint);display:grid;place-items:center;font-size:20px}
+.row-main{flex:1;min-width:0}.row-main strong{font-size:12px;display:block}.row-main small{font-size:10px;color:var(--muted);display:block;margin-top:5px}
+.row-end{text-align:right}.row-end strong{font-size:12px;display:block}.row-end small{font-size:10px;color:var(--muted)}
+.status{font-size:10px;padding:5px 8px;border-radius:8px;background:#fff0dc;color:#a8630d;white-space:nowrap}
+.primary,.secondary,.danger{border:0;border-radius:13px;padding:13px 14px;font-weight:800;font-size:13px}
+.primary{background:var(--green);color:#fff;box-shadow:0 4px 10px #08634425}.secondary{background:var(--mint);color:var(--green)}.danger{background:#fff0f0;color:var(--red)}
+.full{width:100%}.button-row{display:flex;gap:8px}.button-row>*{flex:1}
+.form-label{font-size:11px;font-weight:700;color:#53665c;display:block;margin:12px 0 6px}
+.field{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfdfb;outline:none;color:var(--ink);font-size:13px}
+.field:focus{border-color:#74b99b;box-shadow:0 0 0 3px #0d805815}
+.cart-line{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.floating-cart{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));width:min(488px,calc(100% - 28px));z-index:9;display:none;align-items:center;gap:11px;padding:11px 14px;border:0;border-radius:17px;background:linear-gradient(135deg,#086344,#0d8058);color:#fff;box-shadow:0 8px 24px #064b3545;text-align:left}
+.floating-cart.visible{display:flex}.floating-cart-icon{position:relative;width:42px;height:42px;flex:0 0 42px;border-radius:13px;background:#ffffff20;display:grid;place-items:center;font-size:21px}.floating-cart-count{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:var(--orange);color:#fff;font-size:10px;font-weight:900;display:grid;place-items:center;border:2px solid var(--green)}.floating-cart-info{flex:1;min-width:0}.floating-cart-info strong{display:block;font-size:12px}.floating-cart-info small{display:block;font-size:10px;color:#d6eee2;margin-top:3px}.floating-cart-total{font-size:14px;font-weight:900;white-space:nowrap}.cart-modal-list{max-height:42vh;overflow:auto}.cart-modal-empty{padding:20px 8px;text-align:center;color:var(--muted);font-size:12px}
+@media(min-width:520px){.floating-cart{bottom:103px}}
+.cart-thumb{width:45px;height:48px;border-radius:11px;background:var(--mint);display:grid;place-items:center;font-size:23px}
+.qty{display:flex;align-items:center;gap:10px}.qty button{border:1px solid var(--line);background:#f8fbf9;border-radius:8px;width:27px;height:27px;color:var(--green);font-weight:bold}
+.summary-line{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin:10px 0;color:#5b6d63}.summary-line.total{font-size:17px;font-weight:900;color:var(--green);border-top:1px solid var(--line);padding-top:13px}
+.pay-option{border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;gap:9px;align-items:center;margin-bottom:8px;font-size:12px}
+.pay-option input{accent-color:var(--green)}.pay-option.selected{border-color:var(--green);background:#f0faf4}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);padding:9px 7px calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#fffffff2;backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:10}
+.nav-btn{border:0;background:transparent;color:#84928b;padding:5px 2px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700}
+.nav-btn .nav-icon{font-size:21px;line-height:1.2}.nav-btn.active{background:var(--mint);color:var(--green)}
+.fab{position:fixed;bottom:88px;left:calc(50% - min(520px,100%)/2 + 16px);background:var(--orange);color:#fff;border:0;border-radius:15px;width:52px;height:52px;font-size:24px;box-shadow:0 8px 18px #f39b3540;z-index:5}
+.empty{text-align:center;padding:35px 15px;color:var(--muted);font-size:12px}.empty b{display:block;font-size:32px;margin-bottom:10px}
+.toast{position:fixed;top:18px;left:50%;transform:translate(-50%,-130px);transition:.25s;background:#123d2c;color:#fff;border-radius:12px;padding:12px 18px;font-size:12px;z-index:30;box-shadow:var(--shadow);width:max-content;max-width:90%}.toast.show{transform:translate(-50%,0)}
+.modal-backdrop{position:fixed;inset:0;background:#0b2119a6;z-index:20;display:none;align-items:flex-end;justify-content:center;padding:12px}.modal-backdrop.open{display:flex}
+.modal{background:#fff;width:min(520px,100%);max-height:90vh;overflow:auto;border-radius:24px;padding:19px 17px calc(18px + env(safe-area-inset-bottom));box-shadow:0 15px 50px #0003}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.modal-head h3{font-size:17px;margin:0}.close{border:0;background:#f0f4f1;border-radius:10px;width:34px;height:34px;font-size:20px;color:#52665b}
+.variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.variant{border:1px solid var(--line);border-radius:12px;padding:10px 5px;text-align:center;font-size:11px;background:white}.variant.active{border-color:var(--green);background:var(--mint);color:var(--green);font-weight:bold}
+hr{border:0;border-top:1px solid var(--line);margin:13px 0}
+@media(min-width:520px){body{padding-top:15px;padding-bottom:100px}.app{border-radius:25px;overflow:hidden;box-shadow:0 10px 40px #0b3e2612}.bottom-nav{bottom:15px;border:1px solid var(--line);border-radius:18px}.fab{bottom:103px;left:calc(50% - 244px)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="topline">
+  <div class="brand"><div class="brand-mark">🚚</div><div><h1>SOULYAS</h1><p>DRINKS PRO · Distribution de boissons</p></div></div>
+  <div class="top-actions"><button class="icon-btn" id="backupBtn" title="Sauvegarde">⇧</button><button class="icon-btn" id="helpBtn" title="Aide">?</button></div>
+ </div>
+ <div class="greeting"><div><h2 id="greetingTitle">Bienvenue 👋</h2><p id="greetingSub">Prêt pour une nouvelle tournée ?</p></div><div class="day-pill" id="todayLabel">📅 Aujourd’hui</div></div>
+</header>
+<main class="content">
+ <section class="screen active" id="screen-home">
+  <div class="metrics">
+   <div class="metric"><div class="metric-top"><span>Ventes du jour</span><span class="metric-icon">🧾</span></div><strong id="todaySales">0 DA</strong><small id="salesCount">0 vente(s)</small></div>
+   <div class="metric warn"><div class="metric-top"><span>Créances clients</span><span class="metric-icon">💳</span></div><strong id="debtTotal">0 DA</strong><small>Montants à encaisser</small></div>
+   <div class="metric blue"><div class="metric-top"><span>Stock en tournée</span><span class="metric-icon">🚚</span></div><strong id="stockCount">0</strong><small>unités restantes</small></div>
+   <div class="metric purple"><div class="metric-top"><span>Commandes ouvertes</span><span class="metric-icon">📦</span></div><strong id="orderCount">0</strong><small>En attente de préparation ou livraison</small></div>
+  </div>
+  <div class="section-head"><div><h2>Accès rapides</h2><div class="sub">Tout pour votre tournée</div></div></div>
+  <div class="quick-actions">
+   <button class="quick" data-go="sale"><span class="qicon">🛒</span><span>Nouvelle vente</span></button>
+   <button class="quick" data-go="orders"><span class="qicon">📝</span><span>Commande</span></button>
+   <button class="quick" data-go="customers"><span class="qicon">👥</span><span>Clients</span></button>
+   <button class="quick" data-go="truck"><span class="qicon">🚚</span><span>Camion</span></button>
+  </div>
+  <div class="section-head"><h2>Dernières ventes</h2><button class="text-btn" data-go="history">Tout afficher →</button></div>
+  <div class="card" id="recentSales"></div>
+  <div class="card"><div class="card-title"><span>💡 Rappel</span><span class="status">Avant le départ</span></div><div style="font-size:12px;line-height:1.9;color:var(--muted)">Vérifiez le chargement du camion, les commandes et les créances avant le départ.</div></div>
+ </section>
+ <section class="screen" id="screen-sale">
+  <div class="section-head"><div><h2>Nouvelle vente</h2><div class="sub">Touchez un produit pour l’ajouter au panier</div></div><button class="text-btn" id="clearCart">Vider le panier</button></div>
+  <div class="searchbar"><span>⌕</span><input id="productSearch" placeholder="Rechercher une boisson ou une marque…" autocomplete="off"></div>
+  <div class="chips" id="categoryChips"></div>
+  <div class="product-grid" id="productGrid"></div>
+  <div style="height:15px"></div>
+  <div class="card">
+   <div class="card-title"><span>🛒 Panier</span><span class="status" id="cartBadge">0 produit</span></div>
+   <label class="form-label" for="saleCustomer">Client / magasin (facultatif)</label><select class="field" id="saleCustomer"></select>
+   <div id="cartItems"></div>
+   <div id="cartSummary"></div>
+   <button class="primary full" id="checkoutBtn">Passer au paiement →</button>
+  </div>
+ </section>
+ <section class="screen" id="screen-customers">
+  <div class="section-head"><div><h2>Clients et magasins</h2><div class="sub">Fichier clients et soldes</div></div><button class="primary" id="addCustomerBtn" style="padding:10px 12px">＋ Ajouter un client</button></div>
+  <div class="searchbar"><span>⌕</span><input id="customerSearch" placeholder="Rechercher par magasin ou téléphone…"></div>
+  <div id="customerList"></div>
+ </section>
+ <section class="screen" id="screen-truck">
+  <div class="section-head"><div><h2>Stock du camion</h2><div class="sub">Quantités disponibles à la vente pendant la tournée</div></div></div>
+  <div class="metrics"><div class="metric"><div class="metric-top"><span>Total des unités</span><span class="metric-icon">📦</span></div><strong id="truckUnits">0</strong></div><div class="metric blue"><div class="metric-top"><span>Références disponibles</span><span class="metric-icon">🧃</span></div><strong id="truckKinds">0</strong></div></div>
+  <div class="card" id="tripPanel"><div class="card-title"><span>🚚 Tournée en cours</span><span class="status" id="tripStatus">Aucune tournée</span></div><div id="activeTripSummary" class="sub" style="line-height:1.8;margin-bottom:12px">Créez une tournée et choisissez précisément les boissons et quantités chargées dans le camion.</div><div class="button-row"><button class="primary" id="startTripBtn">＋ Nouvelle tournée</button><button class="secondary" id="finishTripBtn" disabled>Terminer la tournée</button></div></div>
+  <div class="card"><div class="card-title"><span>Stock du dépôt</span><span class="status">Inventaire</span></div><div style="font-size:11px;color:var(--muted);line-height:1.8">Le stock du dépôt diminue au chargement. Les ventes diminuent uniquement le stock de la tournée.</div><div style="font-size:11px;color:var(--muted);line-height:1.8">Saisissez les quantités réellement disponibles au dépôt. Le chargement d’une tournée les déduira du stock.</div><div id="truckList"></div><button class="primary full" id="saveTruckBtn">Enregistrer le stock</button></div>
+ </section>
+ <section class="screen" id="screen-more">
+  <div class="section-head"><div><h2>Plus</h2><div class="sub">Commandes, créances, historique et rapports</div></div></div>
+  <div class="card">
+   <button class="list-row" data-go="orders" style="width:100%;background:none;border:0;text-align:right"><div class="avatar">📝</div><div class="row-main"><strong>Commandes</strong><small>Enregistrer une commande à préparer</small></div><span>←</span></button>
+   <button class="list-row" data-go="debts" style="width:100%;background:none;border:0;text-align:right"><div class="avatar">💳</div><div class="row-main"><strong>Créances et encaissements</strong><small>Suivre les soldes et encaissements</small></div><span>←</span></button>
+   <button class="list-row" data-go="history" style="width:100%;background:none;border:0;text-align:right"><div class="avatar">🧾</div><div class="row-main"><strong>Historique des ventes</strong><small>Consulter les tickets précédents</small></div><span>←</span></button>
+   <button class="list-row" data-go="reports" style="width:100%;background:none;border:0;text-align:right"><div class="avatar">📊</div><div class="row-main"><strong>Rapports</strong><small>Synthèse des ventes et encaissements</small></div><span>←</span></button>
+  </div>
+  <div class="card"><div class="card-title">🥤 Gestion des produits</div><p class="sub" style="line-height:1.8">Ajoutez des produits, des photos ou modifiez les références existantes.</p><button class="primary full" id="manageProductsBtn">＋ Gérer les produits</button></div>
+  <div class="card"><div class="card-title">⚙️ Paramètres et données</div>
+   <label class="form-label">Nom de l’activité</label><input class="field" id="businessName" placeholder="Ex. : Distributeur de boissons">
+   <label class="form-label">Téléphone (facultatif)</label><input class="field" id="businessPhone" inputmode="tel" placeholder="05xxxxxxxx">
+   <label class="form-label">Imprimante préférée</label><select class="field" id="printerChoice"><option value="xprinter58">Xprinter XP-P801A — Bluetooth, 58 mm</option><option value="generic58">Imprimante thermique générique — 58 mm</option><option value="generic80">Imprimante thermique — 80 mm</option><option value="system">Choisir l’imprimante dans Android</option></select>
+   <label class="form-label" style="margin-top:10px">Format du ticket</label><select class="field" id="receiptWidth"><option value="58">58 mm</option><option value="80">80 mm</option></select>
+   <label class="list-row" style="margin-top:10px;display:flex;align-items:center;gap:10px"><input type="checkbox" id="autoPrint" style="width:18px;height:18px"> <span><strong>Imprimer automatiquement après la vente</strong><small style="display:block;color:var(--muted);margin-top:3px">Android peut demander une confirmation dans la fenêtre d’impression.</small></span></label>
+   <button class="secondary full" id="testPrint" style="margin-top:10px">Tester l’impression</button>
+   <button class="primary full" id="saveSettings" style="margin-top:12px">Enregistrer les paramètres</button>
+   <hr>
+   <div class="button-row"><button class="secondary" id="exportBtn">Exporter une sauvegarde</button><button class="secondary" id="importBtn">Restaurer une sauvegarde</button></div>
+   <input type="file" id="importFile" accept="application/json" hidden>
+   <p class="sub" style="line-height:1.8">Les données sont enregistrées sur cet appareil. Exportez régulièrement une sauvegarde, notamment avant de changer de téléphone ou d’effacer les données du navigateur.</p>
+  </div>
+ </section>
+ <section class="screen" id="screen-orders">
+  <div class="section-head"><div><h2>Commandes</h2><div class="sub">Suivi des commandes : attente, préparation et livraison</div></div><button class="primary" id="addOrderBtn" style="padding:10px">＋ Nouvelle commande</button></div><div id="ordersList"></div>
+ </section>
+ <section class="screen" id="screen-debts">
+  <div class="section-head"><div><h2>Créances et encaissements</h2><div class="sub">Solde restant par client</div></div></div><div id="debtsList"></div>
+ </section>
+ <section class="screen" id="screen-history">
+  <div class="section-head"><div><h2>Historique des ventes</h2><div class="sub">Tous les tickets enregistrés sur cet appareil</div></div></div><div id="historyList"></div>
+ </section>
+ <section class="screen" id="screen-reports">
+  <div class="section-head"><div><h2>Rapports</h2><div class="sub">Vue synthétique de l’activité</div></div></div>
+  <div class="metrics"><div class="metric"><div class="metric-top"><span>Total des ventes</span><span class="metric-icon">🧾</span></div><strong id="reportSales">0 DA</strong></div><div class="metric warn"><div class="metric-top"><span>Total encaissé</span><span class="metric-icon">💵</span></div><strong id="reportPaid">0 DA</strong></div><div class="metric blue"><div class="metric-top"><span>Total des créances</span><span class="metric-icon">💳</span></div><strong id="reportDebt">0 DA</strong></div><div class="metric purple"><div class="metric-top"><span>Nombre de tickets</span><span class="metric-icon">📄</span></div><strong id="reportCount">0</strong></div></div>
+  <div class="card"><div class="card-title">À propos des bénéfices</div><div style="font-size:12px;color:var(--muted);line-height:1.9">Cette version affiche les ventes, les encaissements et les créances. Le calcul du bénéfice nécessite aussi les coûts d’achat, de transport et les autres charges.</div><button class="secondary full" id="reportExport" style="margin-top:12px">Exporter les ventes en CSV</button></div>
+ </section>
+</main>
+<nav class="bottom-nav">
+ <button class="nav-btn active" data-go="home"><span class="nav-icon">⌂</span><span>Accueil</span></button>
+ <button class="nav-btn" data-go="sale"><span class="nav-icon">🛒</span><span>Vente</span></button>
+ <button class="nav-btn" data-go="customers"><span class="nav-icon">♙</span><span>Clients</span></button>
+ <button class="nav-btn" data-go="truck"><span class="nav-icon">🚚</span><span>Camion</span></button>
+ <button class="nav-btn" data-go="more"><span class="nav-icon">☰</span><span>Plus</span></button>
+</nav>
+<button type="button" class="floating-cart" id="floatingCart" aria-label="Ouvrir le panier" data-open-cart><span class="floating-cart-icon">🛒<span class="floating-cart-count" id="floatingCartCount">0</span></span><span class="floating-cart-info"><strong>Voir le panier</strong><small id="floatingCartUnits">0 unité</small></span><span class="floating-cart-total" id="floatingCartTotal">0 DA</span><span aria-hidden="true">›</span></button>
+<div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="modalBackdrop"><div class="modal" id="modal"></div></div>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const money=n=>new Intl.NumberFormat('fr-DZ',{maximumFractionDigits:0}).format(Number(n)||0)+' DA';
+const dateNow=()=>new Date().toLocaleDateString('fr-DZ');
+const stamp=()=>new Date().toISOString();
+const uid=()=>Math.random().toString(36).slice(2,9).toUpperCase();
+const seedProducts=[
+{id:'p1',name:'Coca-Cola',brand:'Coca-Cola',category:'Sodas',size:'Canette 330 ml',variant:'Rouge',price:120,stock:48,kind:'can',color:'cola',emoji:'🥤'},
+{id:'p2',name:'Fanta',brand:'Fanta',category:'Sodas',size:'Bouteille 1 L',variant:'Orange',price:150,stock:36,kind:'bottle',color:'orange',emoji:'🧃'},
+{id:'p3',name:'Sprite',brand:'Sprite',category:'Sodas',size:'Bouteille 1 L',variant:'Vert',price:150,stock:30,kind:'bottle',color:'green-bottle',emoji:'🧃'},
+{id:'p4',name:'Eau minérale',brand:'Eaux',category:'Eau',size:'Bouteille 1,5 L',variant:'Bleu',price:60,stock:100,kind:'bottle',color:'water',emoji:'💧'},
+{id:'p5',name:'Jus d’orange',brand:'Oasis',category:'Jus',size:'Bouteille 1 L',variant:'Orange',price:180,stock:24,kind:'bottle',color:'orange',emoji:'🍊'},
+{id:'p6',name:'Eau 0,5 L',brand:'Eaux',category:'Eau',size:'Bouteille 0,5 L',variant:'Bleu',price:35,stock:120,kind:'bottle',color:'water',emoji:'💧'},
+{id:'p7',name:'Boisson énergisante',brand:'Red Bull',category:'Énergie',size:'Canette 250 ml',variant:'Bleu/argent',price:260,stock:18,kind:'can',color:'blue-bottle',emoji:'⚡'},
+{id:'p8',name:'Jus de fruits',brand:'Mix fruits',category:'Jus',size:'Brique 200 ml',variant:'Mixte',price:70,stock:60,kind:'can',color:'orange',emoji:'🍹'}
+];
+const defaultState=()=>({products:seedProducts.map(x=>({...x})),customers:[{id:'c1',name:'Magasin Al Nour',phone:'0550 123 456',address:'Zone commerciale'},{id:'c2',name:'Épicerie El Amel',phone:'0661 234 567',address:''}],sales:[],payments:[],orders:[],cart:[],category:'Tout',settings:{name:'SOULYAS DRINKS PRO',phone:'',width:'58',printer:'xprinter58',autoPrint:true}});
+let state;
+try{state=JSON.parse(localStorage.getItem('rafd_mobile_v1'))||defaultState()}catch(e){state=defaultState()}
+state.trips=state.trips||[]; state.activeTrip=state.activeTrip||null; state.cartOrderId=state.cartOrderId||null;
+// Migration des anciennes catégories arabes vers le français.
+const catMap={'الكل':'Tout','غازية':'Sodas','عصائر':'Jus','ماء':'Eau','طاقة':'Énergie','أخرى':'Autres','Tout':'Tout','Sodas':'Sodas','Jus':'Jus','Eau':'Eau','Énergie':'Énergie','Autres':'Autres'}; state.category=catMap[state.category]||state.category||'Tout'; state.products.forEach(p=>{p.category=catMap[p.category]||p.category;});
+const productMigration={p1:['Coca-Cola','Coca-Cola','Sodas','Canette 330 ml','Rouge'],p2:['Fanta','Fanta','Sodas','Bouteille 1 L','Orange'],p3:['Sprite','Sprite','Sodas','Bouteille 1 L','Vert'],p4:['Eau minérale','Eaux','Eau','Bouteille 1,5 L','Bleu'],p5:['Jus d’orange','Oasis','Jus','Bouteille 1 L','Orange'],p6:['Eau 0,5 L','Eaux','Eau','Bouteille 0,5 L','Bleu'],p7:['Boisson énergisante','Red Bull','Énergie','Canette 250 ml','Bleu/argent'],p8:['Jus de fruits','Mix fruits','Jus','Brique 200 ml','Mixte']}; state.products.forEach(p=>{if(productMigration[p.id]){const v=productMigration[p.id];[p.name,p.brand,p.category,p.size,p.variant]=v;}}); state.customers.forEach(c=>{if(c.id==='c1'&&c.name==='محل النور'){c.name='Magasin Al Nour';c.address='Zone commerciale';}if(c.id==='c2'&&c.name==='بقالة الأمل')c.name='Épicerie El Amel';}); if(state.settings?.name==='موزع المشروبات')state.settings.name='SOULYAS DRINKS PRO';
+function save(){localStorage.setItem('rafd_mobile_v1',JSON.stringify(state));renderAll()}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function art(p){return `<div class="product-art">${p.image?`<img class="product-photo" src="${p.image}" alt="${escapeHTML(p.name)}">`:`<div class="${p.kind==='can'?'can':'bottle'} ${p.color}" data-label="${escapeHTML(p.brand)}"></div>`}</div>`}
+function go(name){$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+name));$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===name));if(name==='sale')renderProducts();renderAll();renderFloatingCart();window.scrollTo({top:0,behavior:'smooth'})}
+document.addEventListener('click',e=>{const cart=e.target.closest('[data-open-cart]');if(cart){openCartModal();return}const b=e.target.closest('[data-go]');if(b){go(b.dataset.go)}});
+function totalCart(){return state.cart.reduce((s,i)=>s+i.qty*i.price,0)}
+function productById(id){return state.products.find(p=>p.id===id)}
+function tripQty(productId){if(!state.activeTrip)return 0;return Number(state.activeTrip.items?.[productId]||0)}
+function startTripModal(){
+ if(state.activeTrip){toast('Terminez d’abord la tournée en cours.');return;}
+ const rows=state.products.map(p=>`<div class="list-row"><div class="avatar">${p.emoji||'🥤'}</div><div class="row-main"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.size||'')} · Dépôt : ${p.stock}</small></div><input class="field trip-load" data-trip-product="${p.id}" type="number" min="0" max="${p.stock}" value="0" style="width:92px;text-align:center;padding:10px" aria-label="Quantité ${escapeHTML(p.name)}"></div>`).join('');
+ openModal('Préparer une nouvelle tournée',`<label class="form-label">Nom / secteur de la tournée</label><input class="field" id="tripName" placeholder="Ex. : Oran centre – matin" maxlength="80"><p class="sub">Saisissez la quantité de chaque référence à charger. Le stock du dépôt sera déduit à la validation.</p><div style="max-height:42vh;overflow:auto">${rows}</div><button class="primary full" id="confirmStartTrip" style="margin-top:14px">Valider le chargement</button>`);
+ $('#confirmStartTrip').onclick=()=>{const inputs=$$('.trip-load');const items={};let total=0;for(const input of inputs){const p=productById(input.dataset.tripProduct),q=Math.floor(Number(input.value)||0);if(q<0||q>p.stock){toast('Une quantité dépasse le stock du dépôt.');return;}if(q){items[p.id]=q;total+=q;}}if(!total){toast('Chargez au moins un produit pour démarrer.');return;}for(const [id,q] of Object.entries(items))productById(id).stock-=q;state.activeTrip={id:'T'+Date.now().toString().slice(-7),name:$('#tripName').value.trim()||'Tournée '+new Date().toLocaleDateString('fr-FR'),startedAt:stamp(),items};state.cart=[];closeModal();save();go('truck');toast('Tournée démarrée : stock chargé.');};
+}
+function finishTrip(){if(!state.activeTrip)return;const t=state.activeTrip;if(!confirm('Terminer cette tournée ? Les boissons invendues seront retournées au stock du dépôt.'))return;for(const [id,q] of Object.entries(t.items||{})){const p=productById(id);if(p)p.stock+=Math.max(0,Number(q)||0);}t.finishedAt=stamp();t.remaining={...t.items};state.trips.push({...t});state.activeTrip=null;state.cart=[];save();toast('Tournée terminée. Le stock restant est retourné au dépôt.');}
+// Liaison explicite des boutons de tournée (corrige le bouton inactif).
+$('#startTripBtn').addEventListener('click', startTripModal);
+$('#finishTripBtn').addEventListener('click', finishTrip);
+function renderProducts(){
+ const cats=['Tout','Sodas','Jus','Eau','Énergie'];
+ $('#categoryChips').innerHTML=cats.map(c=>`<button class="chip ${state.category===c?'active':''}" data-cat="${c}">${c}</button>`).join('');
+ const q=($('#productSearch')?.value||'').trim().toLowerCase();
+ const items=state.products.filter(p=>(state.category==='Tout'||p.category===state.category)&&[p.name,p.brand,p.size,p.variant].join(' ').toLowerCase().includes(q));
+ if(!state.activeTrip){$('#productGrid').innerHTML='<div class="card" style="grid-column:1/-1;text-align:center;line-height:1.8"><strong>Aucune tournée active</strong><p class="sub">Créez une tournée et chargez les boissons depuis l’onglet Camion avant d’enregistrer une vente.</p><button class="primary" data-go="truck">Préparer une tournée</button></div>';}
+ else $('#productGrid').innerHTML=items.map(p=>{const available=tripQty(p.id);return `<article class="product"><span class="stock-tag">Disponible ${available}</span>${art(p)}<div class="product-name">${escapeHTML(p.name)}</div><div class="product-meta">${escapeHTML(p.brand)} · ${escapeHTML(p.size)}</div><div class="product-bottom"><div><div class="price">${money(p.price)}</div><div class="unit">par unité</div></div><button class="add-btn" data-add="${p.id}" aria-label="Ajouter ${escapeHTML(p.name)}" ${available<=0?'disabled style="opacity:.35"':''}>+</button></div></article>`}).join('')||'<div class="empty">Aucun produit correspondant.</div>';
+ $('#cartBadge').textContent=state.cart.reduce((sum,i)=>sum+i.qty,0)+' unité(s)';
+ const customers=state.customers;const old=$('#saleCustomer').value;
+ $('#saleCustomer').innerHTML='<option value="">Client comptant / non précisé</option>'+customers.map(c=>`<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
+ if(customers.some(c=>c.id===old))$('#saleCustomer').value=old;
+ renderCart();
+}
+function cartLineHTML(i){const p=productById(i.id);return `<div class="cart-line"><div class="cart-thumb">${p?.image?`<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:11px">`:(p?.emoji||'🥤')}</div><div class="row-main"><strong>${escapeHTML(p?.name||'produit')}</strong><small>${escapeHTML(p?.size||'')} · ${money(i.price)} / unité</small><div class="qty" style="margin-top:7px"><button type="button" data-qty="${i.id}" data-delta="-1" aria-label="Diminuer">−</button><b>${i.qty}</b><button type="button" data-qty="${i.id}" data-delta="1" aria-label="Augmenter">+</button><button type="button" class="cart-remove" data-remove="${i.id}" aria-label="Retirer ${escapeHTML(p?.name||'produit')} du panier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m-11 0 1 14h12l1-14M10 10v6m4-6v6"/></svg><span>Retirer</span></button></div></div><strong style="font-size:12px;white-space:nowrap">${money(i.qty*i.price)}</strong></div>`}
+function renderFloatingCart(){const el=$('#floatingCart');if(!el)return;const active=$('#screen-sale')?.classList.contains('active');const units=state.cart.reduce((sum,i)=>sum+i.qty,0);el.classList.toggle('visible',!!active&&units>0);$('#floatingCartCount').textContent=units;$('#floatingCartUnits').textContent=units+(units===1?' unité':' unités')+' · '+state.cart.length+(state.cart.length===1?' référence':' références');$('#floatingCartTotal').textContent=money(totalCart());}
+function renderCart(){
+ const el=$('#cartItems');if(!state.cart.length){el.innerHTML='<div class="empty" style="padding:20px 5px"><b>🛒</b>Le panier est vide. Sélectionnez des produits ci-dessus.</div>';$('#cartSummary').innerHTML='';$('#checkoutBtn').disabled=true;$('#checkoutBtn').style.opacity=.55;renderFloatingCart();return}
+ $('#checkoutBtn').disabled=false;$('#checkoutBtn').style.opacity=1;
+ el.innerHTML=state.cart.map(cartLineHTML).join('');
+ $('#cartSummary').innerHTML=`<div class="summary-line"><span>Nombre d’unités</span><b>${state.cart.reduce((s,i)=>s+i.qty,0)}</b></div><div class="summary-line total"><span>Total</span><span>${money(totalCart())}</span></div>`;renderFloatingCart();
+}
+function renderCartModalContent(){
+ const items=$('#cartModalItems');if(!items)return;
+ items.innerHTML=state.cart.length?state.cart.map(cartLineHTML).join(''):'<div class="cart-modal-empty">Votre panier est vide. Ajoutez des boissons pour commencer.</div>';
+ $('#cartModalSummary').innerHTML=`<div class="summary-line"><span>Nombre de références</span><b>${state.cart.length}</b></div><div class="summary-line"><span>Nombre d’unités</span><b>${state.cart.reduce((n,i)=>n+i.qty,0)}</b></div><div class="summary-line total"><span>Total à payer</span><span>${money(totalCart())}</span></div>`;
+ const checkout=$('#cartModalCheckout');if(checkout)checkout.disabled=!state.cart.length;
+}
+function openCartModal(){
+ const selected=$('#saleCustomer')?.value||'';
+ openModal('Votre panier',`<div class="cart-modal-list" id="cartModalItems"></div><div id="cartModalSummary"></div><label class="form-label" for="cartModalCustomer">Client / magasin (facultatif)</label><select class="field" id="cartModalCustomer"><option value="">Client comptant / non précisé</option>${state.customers.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${escapeHTML(c.name)}</option>`).join('')}</select><button type="button" class="primary full" id="cartModalCheckout" style="margin-top:14px">Passer au paiement →</button><button type="button" class="secondary full" id="cartModalContinue" style="margin-top:8px">Continuer les achats</button>`);
+ renderCartModalContent();
+ $('#cartModalCheckout').onclick=()=>{if(!state.cart.length)return;$('#saleCustomer').value=$('#cartModalCustomer').value;closeModal();$('#checkoutBtn').click()};
+ $('#cartModalContinue').onclick=closeModal;
+}
+function renderCustomers(){
+ const q=($('#customerSearch')?.value||'').toLowerCase();const list=state.customers.filter(c=>(c.name+' '+c.phone+' '+c.address).toLowerCase().includes(q));
+ $('#customerList').innerHTML=list.map(c=>{const debt=customerDebt(c.id);return `<div class="card"><div class="list-row" style="padding-top:0"><div class="avatar">🏪</div><div class="row-main"><strong>${escapeHTML(c.name)}</strong><small>${escapeHTML(c.phone||'Pas de téléphone')} · ${escapeHTML(c.address||'Pas d’adresse')}</small></div><div class="row-end"><strong style="color:${debt?'var(--red)':'var(--green)'}">${money(debt)}</strong><small>Solde dû</small></div></div><div class="button-row"><button class="secondary" data-customer-sale="${c.id}">Vendre à ce magasin</button><button class="secondary" data-customer-pay="${c.id}">Enregistrer un encaissement</button></div></div>`}).join('')||'<div class="empty"><b>👥</b>Aucun client correspondant.</div>';
+}
+function customerDebt(id){return state.sales.filter(s=>s.customerId===id).reduce((n,s)=>n+s.total-s.paid,0)-state.payments.filter(p=>p.customerId===id).reduce((n,p)=>n+p.amount,0)}
+function allDebt(){return state.customers.reduce((n,c)=>n+Math.max(0,customerDebt(c.id)),0)+state.sales.filter(s=>!s.customerId).reduce((n,s)=>n+s.total-s.paid,0)}
+function renderTruck(){
+ $('#truckList').innerHTML=state.products.map(p=>`<div class="list-row"><div class="avatar">${p.emoji}</div><div class="row-main"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.size)} · ${money(p.price)} · Dépôt</small></div><div style="width:84px"><input class="field truck-input" data-stock="${p.id}" type="number" min="0" value="${p.stock}" style="padding:9px;text-align:center"></div></div>`).join('');
+ const trip=state.activeTrip;const truckUnits=trip?Object.values(trip.items||{}).reduce((a,b)=>a+Number(b||0),0):0;
+ $('#truckUnits').textContent=truckUnits;$('#truckKinds').textContent=trip?Object.values(trip.items||{}).filter(q=>Number(q)>0).length:0;
+ $('#tripStatus').textContent=trip?'En cours':'Aucune tournée';$('#activeTripSummary').innerHTML=trip?`<strong>${escapeHTML(trip.name)}</strong><br>Début : ${new Date(trip.startedAt).toLocaleString('fr-FR')}<br>${Object.entries(trip.items||{}).map(([id,q])=>{const p=productById(id);return p?`${escapeHTML(p.name)} : <b>${q}</b>`:''}).filter(Boolean).join(' · ')}<br><b>${truckUnits} unité(s) restante(s)</b>`:'Créez une tournée et choisissez précisément les boissons et quantités chargées dans le camion.';
+ $('#startTripBtn').disabled=!!trip;$('#finishTripBtn').disabled=!trip;$('#finishTripBtn').style.opacity=trip?1:.5;
+}
+function renderDebts(){
+ const debtors=state.customers.map(c=>({...c,debt:customerDebt(c.id)})).filter(c=>c.debt>0.001);
+ $('#debtsList').innerHTML=debtors.map(c=>`<div class="card"><div class="list-row" style="padding-top:0"><div class="avatar">💳</div><div class="row-main"><strong>${escapeHTML(c.name)}</strong><small>${escapeHTML(c.phone||'')} · Solde dû</small></div><div class="row-end"><strong style="color:var(--red)">${money(c.debt)}</strong></div></div><button class="primary full" data-customer-pay="${c.id}">＋ Enregistrer un encaissement</button></div>`).join('')||'<div class="empty"><b>🎉</b>Aucune créance client enregistrée.</div>';
+}
+function renderHistory(){
+ $('#historyList').innerHTML=[...state.sales].reverse().map(s=>`<div class="card"><div class="list-row" style="padding-top:0"><div class="avatar">🧾</div><div class="row-main"><strong>Ticket #${s.id}</strong><small>${escapeHTML(s.customerName||'client Comptant')} · ${new Date(s.date).toLocaleString('fr-DZ')}</small></div><div class="row-end"><strong>${money(s.total)}</strong><small>${s.total-s.paid>0?'Reste '+money(s.total-s.paid):'Payé'}</small></div></div><button class="secondary full" data-receipt="${s.id}">Voir / imprimer le ticket</button></div>`).join('')||'<div class="empty"><b>🧾</b>Aucune vente pour le moment.</div>';
+}
+function orderStatusLabel(o){
+ const status=o.status||'En attente de préparation';
+ if(status==='Préparation en cours')return 'À préparer';
+ if(status==='En attente de préparation')return 'En attente';
+ return status;
+}
+function renderOrders(){
+ const orders=[...state.orders].reverse();
+ $('#ordersList').innerHTML=orders.map(o=>{
+  const status=o.status||'En attente de préparation';
+  const units=(o.items||[]).reduce((n,i)=>n+Number(i.qty||0),0);
+  const itemsText=(o.items||[]).map(i=>`${escapeHTML(i.name||productById(i.id)?.name||'Produit')} × ${Number(i.qty)||0}`).join(' · ');
+  let actions='';
+  if(status==='En attente de préparation'||status==='Préparation en cours'){
+   actions=`<button class="primary" data-order-load="${o.id}">${status==='Préparation en cours'?'Reprendre la préparation':'Préparer la commande'}</button><button class="danger" data-order-cancel="${o.id}">Annuler</button>`;
+  }else if(status==='Livrée'){
+   actions=`<button class="secondary full" data-order-details="${o.id}">Consulter le détail</button>`;
+  }else if(status==='Annulée'){
+   actions=`<button class="secondary full" data-order-details="${o.id}">Consulter le détail</button>`;
+  }else{
+   actions=`<button class="secondary full" data-order-details="${o.id}">Consulter le détail</button>`;
+  }
+  return `<div class="card"><div class="list-row" style="padding-top:0"><div class="avatar">📦</div><div class="row-main"><strong>${escapeHTML(o.customerName||'Client')}</strong><small>Commande #${escapeHTML(o.id)} · ${units} unité(s) · ${new Date(o.date).toLocaleDateString('fr-DZ')}</small></div><span class="status">${escapeHTML(orderStatusLabel(o))}</span></div><div style="font-size:12px;line-height:1.7;color:var(--muted);margin:8px 0">${itemsText||'Aucun produit'}</div><div class="summary-line total"><span>Total estimé</span><span>${money(o.total)}</span></div><div class="button-row">${actions}</div></div>`;
+ }).join('')||'<div class="empty"><b>📝</b>Aucune commande. Créez une commande lorsqu’un magasin vous contacte.</div>';
+}
+function renderHome(){
+ const today=new Date().toDateString();const salesToday=state.sales.filter(s=>new Date(s.date).toDateString()===today);
+ $('#todaySales').textContent=money(salesToday.reduce((n,s)=>n+s.total,0));$('#salesCount').textContent=salesToday.length+' vente(s)';
+ $('#debtTotal').textContent=money(allDebt());$('#stockCount').textContent=state.activeTrip?Object.values(state.activeTrip.items||{}).reduce((n,q)=>n+Number(q||0),0):0;$('#orderCount').textContent=state.orders.filter(o=>o.status!=='Livrée').length;
+ $('#recentSales').innerHTML=[...state.sales].slice(-3).reverse().map(s=>`<div class="list-row"><div class="avatar">🧾</div><div class="row-main"><strong>${escapeHTML(s.customerName||'client Comptant')}</strong><small>Ticket #${s.id} · ${new Date(s.date).toLocaleTimeString('fr-DZ',{hour:'2-digit',minute:'2-digit'})}</small></div><div class="row-end"><strong>${money(s.total)}</strong><small>${s.total-s.paid>0?'Crédit '+money(s.total-s.paid):'Payé'}</small></div></div>`).join('')||'<div class="empty" style="padding:18px"><b>👋</b>La première vente apparaîtra ici.</div>';
+}
+function renderReports(){
+ const total=state.sales.reduce((n,s)=>n+s.total,0);const paid=state.sales.reduce((n,s)=>n+s.paid,0)+state.payments.reduce((n,p)=>n+p.amount,0);
+ $('#reportSales').textContent=money(total);$('#reportPaid').textContent=money(paid);$('#reportDebt').textContent=money(allDebt());$('#reportCount').textContent=state.sales.length;
+}
+function renderAll(){renderHome();renderCustomers();renderTruck();renderDebts();renderHistory();renderOrders();renderReports();if($('#screen-sale').classList.contains('active'))renderProducts();$('#businessName').value=state.settings.name||'';$('#businessPhone').value=state.settings.phone||'';$('#receiptWidth').value=state.settings.width||'58';$('#printerChoice').value=state.settings.printer||'xprinter58';$('#autoPrint').checked=state.settings.autoPrint!==false}
+function openModal(title,body){$('#modal').innerHTML=`<div class="modal-head"><h3>${title}</h3><button class="close" id="modalClose">×</button></div>${body}`;$('#modalBackdrop').classList.add('open');$('#modalClose').onclick=closeModal}
+function closeModal(){$('#modalBackdrop').classList.remove('open')}
+$('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
+document.addEventListener('click',e=>{
+ const cat=e.target.closest('[data-cat]');if(cat){state.category=cat.dataset.cat;renderProducts();return}
+ const add=e.target.closest('[data-add]');if(add){const p=productById(add.dataset.add);if(!p)return;if(!state.activeTrip){toast('Créez d’abord une tournée et chargez le camion.');go('truck');return}const available=tripQty(p.id);if(available<=0){toast('Produit indisponible dans la tournée');return}const existing=state.cart.find(i=>i.id===p.id);if(existing){if(existing.qty>=available){toast('La quantité dépasse le stock disponible dans le camion');return}existing.qty++}else state.cart.push({id:p.id,qty:1,price:p.price});renderProducts();toast('Produit ajouté au panier');return}
+ const qty=e.target.closest('[data-qty]');if(qty){const i=state.cart.find(i=>i.id===qty.dataset.qty);const p=productById(qty.dataset.qty);if(i){i.qty+=Number(qty.dataset.delta);if(i.qty<=0)state.cart=state.cart.filter(x=>x.id!==i.id);else if(i.qty>tripQty(p.id)){i.qty=tripQty(p.id);if(i.qty<=0)state.cart=state.cart.filter(x=>x.id!==i.id);toast('Stock insuffisant dans le camion')}renderProducts();renderCartModalContent()}return}
+ const rem=e.target.closest('[data-remove]');if(rem){state.cart=state.cart.filter(i=>i.id!==rem.dataset.remove);renderProducts();renderCartModalContent();return}
+ const cs=e.target.closest('[data-customer-sale]');if(cs){$('#saleCustomer').value=cs.dataset.customer;go('sale');return}
+ const cp=e.target.closest('[data-customer-pay]');if(cp){paymentModal(cp.dataset.customer);return}
+ const rec=e.target.closest('[data-receipt]');if(rec){const s=state.sales.find(x=>x.id===rec.dataset.receipt);if(s)showReceipt(s);return}
+ const ol=e.target.closest('[data-order-load]');if(ol){const o=state.orders.find(x=>x.id===ol.dataset.orderLoad);if(!o||!['En attente de préparation','Préparation en cours'].includes(o.status||'En attente de préparation'))return;if(state.cart.length&&!confirm('Remplacer le panier actuel par cette commande ?'))return;state.cart=(o.items||[]).map(i=>({...i}));state.cartOrderId=o.id;o.status='Préparation en cours';const customerSelect=$('#saleCustomer');if(customerSelect)customerSelect.value=o.customerId||'';save();go('sale');toast('Commande chargée dans la vente. Vérifiez le stock du camion avant de confirmer.');return}
+ const oc=e.target.closest('[data-order-cancel]');if(oc){const o=state.orders.find(x=>x.id===oc.dataset.orderCancel);if(o&&confirm('Annuler cette commande ?')){o.status='Annulée';if(state.cartOrderId===o.id){state.cart=[];state.cartOrderId=null;}save();toast('Commande annulée. Aucun stock n’a été modifié.')}return}
+ const od=e.target.closest('[data-order-details]');if(od){const o=state.orders.find(x=>x.id===od.dataset.orderDetails);if(o){const rows=(o.items||[]).map(i=>`<div class="summary-line"><span>${escapeHTML(i.name||productById(i.id)?.name||'Produit')} × ${Number(i.qty)||0}</span><b>${money((Number(i.qty)||0)*(Number(i.price)||0))}</b></div>`).join('');openModal('Détail de la commande',`<div class="sub">Commande #${escapeHTML(o.id)} · ${escapeHTML(o.customerName||'Client')}<br>${new Date(o.date).toLocaleString('fr-DZ')}<br>Statut : ${escapeHTML(orderStatusLabel(o))}</div>${rows}<div class="summary-line total"><span>Total</span><span>${money(o.total)}</span></div><button class="secondary full" id="closeOrderDetails">Fermer</button>`);$('#closeOrderDetails').onclick=closeModal;}return}
+});
+$('#productSearch').addEventListener('input',renderProducts);$('#customerSearch').addEventListener('input',renderCustomers);
+$('#clearCart').onclick=()=>{state.cart=[];state.cartOrderId=null;renderProducts();renderCartModalContent();renderOrders();toast('Panier vidé')};
+$('#checkoutBtn').onclick=()=>{
+ if(!state.cart.length)return;
+ const customerId=$('#saleCustomer').value;const customer=state.customers.find(c=>c.id===customerId);
+ openModal('Finaliser la vente',`<div class="card" style="box-shadow:none"><div class="summary-line"><span>Client</span><b>${escapeHTML(customer?.name||'client Comptant')}</b></div><div class="summary-line total"><span>Total</span><span>${money(totalCart())}</span></div></div><label class="form-label">Mode de paiement</label><label class="pay-option selected"><input type="radio" name="paymode" value="full" checked> Paiement intégral</label><label class="pay-option"><input type="radio" name="paymode" value="partial"> Paiement partiel</label><label class="pay-option"><input type="radio" name="paymode" value="credit"> À crédit</label><label class="form-label">Montant encaissé (DA)</label><input class="field" id="paidAmount" type="number" min="0" value="${totalCart()}" inputmode="decimal"><p class="sub">Vous pouvez modifier le montant encaissé. Le reste sera ajouté aux créances du client sélectionné.</p><button class="primary full" id="confirmSale" style="margin-top:14px">Confirmer la vente et enregistrer le ticket</button>`);
+ $$('input[name="paymode"]').forEach(r=>r.onchange=()=>{const mode=$('input[name="paymode"]:checked').value;$('#paidAmount').value=mode==='full'?totalCart():mode==='credit'?0:Math.floor(totalCart()/2);$$('.pay-option').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked))});
+ $('#confirmSale').onclick=()=>{
+  const total=totalCart();let paid=Math.max(0,Math.min(total,Number($('#paidAmount').value)||0));const mode=$('input[name="paymode"]:checked').value;if(mode==='full')paid=total;if(mode==='credit')paid=0;
+  if(total<=0){toast('Montant du ticket invalide');return}
+  if(!state.activeTrip){toast('Aucune tournée active. Créez une tournée avant de vendre.');closeModal();go('truck');return}for(const i of state.cart){const p=productById(i.id);if(!p||i.qty>tripQty(i.id)){toast('Stock insuffisant dans le camion pour '+(p?.name||'un produit'));return}}
+  const sale={id:Date.now().toString().slice(-8),date:stamp(),tripId:state.activeTrip?.id||'',tripName:state.activeTrip?.name||'',customerId:customer?.id||'',customerName:customer?.name||'Client comptant',items:state.cart.map(i=>({...i,name:productById(i.id).name,size:productById(i.id).size,brand:productById(i.id).brand})),total,paid,mode};
+  sale.items.forEach(i=>{state.activeTrip.items[i.id]=Math.max(0,tripQty(i.id)-i.qty)});state.sales.push(sale);if(state.cartOrderId){const linkedOrder=state.orders.find(o=>o.id===state.cartOrderId);if(linkedOrder){linkedOrder.status='Livrée';linkedOrder.deliveredAt=stamp();linkedOrder.saleId=sale.id;}}state.cart=[];state.cartOrderId=null;closeModal();save();go('home');showReceipt(sale);toast('Vente enregistrée avec succès');
+ };
+};
+function paymentModal(id){
+ const c=state.customers.find(c=>c.id===id);if(!c)return;const debt=Math.max(0,customerDebt(id));
+ if(debt<=0){toast('Aucune créance pour ce client');return}
+ openModal('Enregistrer un encaissement',`<div class="card" style="box-shadow:none"><div class="summary-line"><span>Client</span><b>${escapeHTML(c.name)}</b></div><div class="summary-line total"><span>Créance actuelle</span><span style="color:var(--red)">${money(debt)}</span></div></div><label class="form-label">Montant reçu (DA)</label><input class="field" id="paymentAmount" type="number" min="1" max="${debt}" value="${Math.round(debt)}" inputmode="decimal"><label class="form-label">Note (facultatif)</label><input class="field" id="paymentNote" placeholder="Ex. : règlement partiel d’un ticket"><button class="primary full" id="confirmPayment" style="margin-top:14px">Enregistrer l’encaissement</button>`);
+ $('#confirmPayment').onclick=()=>{const amount=Number($('#paymentAmount').value);if(!(amount>0)||amount>debt){toast('Vérifiez le montant encaissé');return}state.payments.push({id:uid(),customerId:id,customerName:c.name,amount,note:$('#paymentNote').value,date:stamp()});closeModal();save();toast('Encaissement enregistré');};
+}
+$('#addCustomerBtn').onclick=()=>openModal('Ajouter un client',`<label class="form-label">Nom du magasin *</label><input class="field" id="newCustName" placeholder="Nom du magasin ou du commerçant"><label class="form-label">Téléphone</label><input class="field" id="newCustPhone" inputmode="tel" placeholder="05xxxxxxxx"><label class="form-label">Adresse / secteur</label><input class="field" id="newCustAddress" placeholder="Quartier ou commune"><button class="primary full" id="saveCustomer" style="margin-top:15px">Enregistrer le client</button>`);
+document.addEventListener('click',e=>{if(e.target.id==='saveCustomer'){const name=$('#newCustName').value.trim();if(!name){toast('Saisissez le nom du magasin');return}state.customers.push({id:'c'+uid(),name,phone:$('#newCustPhone').value.trim(),address:$('#newCustAddress').value.trim()});closeModal();save();toast('Client ajouté')}});
+$('#saveTruckBtn').onclick=()=>{$$('.truck-input').forEach(inp=>{const p=productById(inp.dataset.stock);p.stock=Math.max(0,Math.floor(Number(inp.value)||0))});save();toast('Stock du dépôt enregistré')};
+function openNewOrderModal(){
+ const customerOptions=state.customers.map(c=>`<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
+ const productRows=state.products.map(p=>`<div class="list-row" style="gap:8px"><div class="avatar">${p.emoji||'🥤'}</div><div class="row-main"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.size||'')} · ${money(p.price)} / unité</small></div><input class="field order-qty" data-order-product="${p.id}" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Quantité ${escapeHTML(p.name)}" style="width:76px;text-align:center;padding:9px"></div>`).join('');
+ openModal('Nouvelle commande',`<label class="form-label">Magasin / client *</label><select class="field" id="orderCustomer"><option value="">Sélectionner un client</option>${customerOptions}</select><label class="form-label" style="margin-top:12px">Produits et quantités</label><p class="sub">Choisissez les boissons demandées. Cette étape enregistre la commande uniquement : elle ne modifie ni le stock du dépôt ni celui du camion.</p><div style="max-height:43vh;overflow:auto">${productRows}</div><div id="orderDraftTotal" class="summary-line total"><span>Total estimé</span><span>0 DA</span></div><button class="primary full" id="saveOrder" style="margin-top:12px">Enregistrer la commande</button>`);
+ const updateTotal=()=>{let units=0,total=0;$$('.order-qty').forEach(input=>{const p=productById(input.dataset.orderProduct);const q=Math.max(0,Math.floor(Number(input.value)||0));units+=q;if(p)total+=q*p.price;});$('#orderDraftTotal').innerHTML=`<span>${units} unité(s) · Total estimé</span><span>${money(total)}</span>`;};
+ $$('.order-qty').forEach(input=>input.addEventListener('input',updateTotal));
+ $('#saveOrder').onclick=()=>{const c=state.customers.find(c=>c.id===$('#orderCustomer').value);if(!c){toast('Sélectionnez un client.');return;}const items=[];$$('.order-qty').forEach(input=>{const p=productById(input.dataset.orderProduct);const qty=Math.max(0,Math.floor(Number(input.value)||0));if(p&&qty>0)items.push({id:p.id,name:p.name,brand:p.brand||'',size:p.size||'',price:Number(p.price)||0,qty});});if(!items.length){toast('Ajoutez au moins un produit à la commande.');return;}const total=items.reduce((n,i)=>n+i.qty*i.price,0);state.orders.push({id:uid(),customerId:c.id,customerName:c.name,date:stamp(),items,total,status:'En attente de préparation'});closeModal();save();go('orders');toast('Commande enregistrée. Aucun stock n’a encore été déduit.');};
+}
+$('#addOrderBtn').onclick=openNewOrderModal;
+function showReceipt(s){
+ const width=state.settings.width==='80'?'72mm':'48mm';const rows=s.items.map(i=>`<tr><td>${escapeHTML(i.name)}<br><small>${escapeHTML(i.size||'')}</small></td><td>${i.qty}</td><td>${money(i.price*i.qty)}</td></tr>`).join('');
+ const pageSize=state.settings.width==='80'?'80mm':'58mm';const contentWidth=state.settings.width==='80'?'76mm':'54mm';
+ const html=`<!doctype html><html lang="fr" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ticket ${s.id}</title><style>*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,Tahoma,sans-serif;width:${contentWidth};max-width:100%;margin:0 auto;padding:1.5mm;color:#111;font-size:10px;line-height:1.25;overflow-wrap:anywhere}h2{text-align:center;font-size:12px;line-height:1.2;margin:0 0 2px;font-weight:700}p{text-align:center;font-size:8px;margin:2px 0}hr{border:0;border-top:1px dashed #555;margin:4px 0}.meta{font-size:8px;line-height:1.35}table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8px}th,td{text-align:right;padding:2px 1px;vertical-align:top;border-bottom:1px dotted #aaa;word-break:break-word}th:first-child,td:first-child{text-align:left;width:53%}th:nth-child(2),td:nth-child(2){width:12%;text-align:center}th:last-child,td:last-child{width:35%}.tot{display:flex;justify-content:space-between;gap:4px;margin:3px 0;font-size:9px}.tot span:last-child{white-space:nowrap;text-align:right}.grand{font-size:12px;font-weight:bold;margin-top:5px}.center{text-align:center}.print-action{display:block;width:100%;margin:8px 0;padding:8px;border:0;border-radius:5px;background:#086344;color:#fff;font-weight:bold}@page{size:${pageSize} auto;margin:0}@media print{html,body{width:${contentWidth};height:auto;min-height:0;margin:0;padding:0}body{padding:1.5mm}.print-action{display:none}hr,table,.tot{break-inside:avoid;page-break-inside:avoid}}</style></head><body><h2>${escapeHTML(state.settings.name||'Ticket de vente')}</h2><p>${escapeHTML(state.settings.phone||'')}</p><hr><div class="meta">N° ticket : ${s.id}</div><div class="meta">Date : ${new Date(s.date).toLocaleString('fr-DZ')}</div><div class="meta">Client : ${escapeHTML(s.customerName)}</div><hr><table><thead><tr><th>Produit</th><th>Qté</th><th>Montant</th></tr></thead><tbody>${rows}</tbody></table><hr><div class="tot grand"><span>Total</span><span>${money(s.total)}</span></div><div class="tot"><span>Encaissé</span><span>${money(s.paid)}</span></div><div class="tot"><span>Reste à payer</span><span>${money(s.total-s.paid)}</span></div><hr><p class="center">Merci de votre confiance !</p><p class="center">Ticket émis par SOULYAS DRINKS PRO</p><button class="print-action" onclick="window.print()">Imprimer</button><script>if(${state.settings.autoPrint!==false})setTimeout(()=>{try{window.print()}catch(e){}},350)<\/script></body></html>`;
+ const w=window.open('','_blank');if(!w){openModal('Ticket',`<p style="font-size:12px;line-height:1.8">Le navigateur a peut-être bloqué l’ouverture du ticket. Autorisez les fenêtres contextuelles, puis réessayez depuis l’historique des ventes.</p><button class="primary full" id="receiptOk">OK</button>`);$('#receiptOk').onclick=closeModal;return}w.document.open();w.document.write(html);w.document.close();
+}
+
+// Product management: add/edit/delete and local photo upload
+function renderManageProducts(){
+ const el=$('#manageProductsList'); if(!el)return;
+ el.innerHTML=state.products.map(p=>`<div class="manage-product"><img class="manage-thumb" src="${p.image||''}" onerror="this.style.display='none'" alt=""><div class="row-main"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.brand||'')} · ${escapeHTML(p.size||'')} · ${money(p.price)} · Stock ${p.stock}</small><div class="manage-actions" style="margin-top:7px"><button class="secondary" data-edit-product="${p.id}">✏️ Modifier</button><button class="danger" data-delete-product="${p.id}">Supprimer</button></div></div></div>`).join('') || '<div class="empty">Aucun produit pour le moment.</div>';
+}
+function openProductEditor(id){
+ const p=id?productById(id):{id:'p'+uid(),name:'',brand:'',category:'Sodas',size:'',variant:'',price:0,cost:0,stock:0,kind:'bottle',color:'green-bottle',emoji:'🥤',image:''};
+ if(!p)return;
+ openModal(id?'Modifier le produit':'Ajouter un produit',`<label class="form-label">Nom du produit *</label><input class="field" id="prodName" value="${escapeHTML(p.name)}" placeholder="Ex. : Coca-Cola"><label class="form-label">Marque</label><input class="field" id="prodBrand" value="${escapeHTML(p.brand||'')}"><label class="form-label">Catégorie</label><select class="field" id="prodCategory">${['Sodas','Jus','Eau','Énergie','Autres'].map(c=>`<option ${p.category===c?'selected':''}>${c}</option>`).join('')}</select><label class="form-label">Format / contenance</label><input class="field" id="prodSize" value="${escapeHTML(p.size||'')}" placeholder="1,5 L / 330 ml"><label class="form-label">Couleur ou type</label><input class="field" id="prodVariant" value="${escapeHTML(p.variant||'')}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label class="form-label">Prix d’achat (DA)</label><input class="field" id="prodCost" type="number" min="0" value="${Number(p.cost||0)}"></div><div><label class="form-label">Prix de vente (DA) *</label><input class="field" id="prodPrice" type="number" min="0" value="${Number(p.price||0)}"></div><div><label class="form-label">Stock au dépôt</label><input class="field" id="prodStock" type="number" min="0" value="${Number(p.stock||0)}"></div><div><label class="form-label">Type d’emballage</label><select class="field" id="prodKind"><option value="bottle" ${p.kind==='bottle'?'selected':''}>Bouteille</option><option value="can" ${p.kind==='can'?'selected':''}>Canette</option></select></div></div><label class="form-label">Photo du produit</label><input class="field" id="prodImageFile" type="file" accept="image/*"><img id="prodImagePreview" src="${p.image||''}" style="${p.image?'':'display:none;'}width:100%;height:150px;object-fit:contain;background:#f4f7f5;border-radius:12px;margin-top:8px"><p class="sub">Choisissez une photo depuis votre téléphone. Elle sera compressée pour limiter le stockage.</p><button class="primary full" id="saveProductBtn" style="margin-top:14px">Enregistrer le produit</button>`);
+ let imageData=p.image||'';
+ $('#prodImageFile').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){toast('Sélectionnez un fichier image');return}try{imageData=await compressProductImage(f);$('#prodImagePreview').src=imageData;$('#prodImagePreview').style.display='block'}catch(err){toast('Impossible de lire la photo')}};
+ $('#saveProductBtn').onclick=()=>{const name=$('#prodName').value.trim(),price=Number($('#prodPrice').value),stock=Number($('#prodStock').value);if(!name){toast('Saisissez le nom du produit');return}if(!Number.isFinite(price)||price<0||!Number.isFinite(stock)||stock<0){toast('Vérifiez le prix et la quantité');return}const data={...p,name,brand:$('#prodBrand').value.trim(),category:$('#prodCategory').value,size:$('#prodSize').value.trim(),variant:$('#prodVariant').value.trim(),cost:Math.max(0,Number($('#prodCost').value)||0),price,stock:Math.floor(stock),kind:$('#prodKind').value,image:imageData,emoji:p.emoji||'🥤'};if(id){const ix=state.products.findIndex(x=>x.id===id);if(ix>=0)state.products[ix]=data}else state.products.push(data);closeModal();save();renderManageProducts();if($('#screen-sale').classList.contains('active'))renderProducts();toast(id?'Produit modifié':'Produit ajouté')};
+}
+function compressProductImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=700,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.72))};img.src=reader.result};reader.readAsDataURL(file)})}
+$('#manageProductsBtn').onclick=()=>{openModal('Gestion des produits',`<button class="primary full" id="newProductBtn">＋ Ajouter un produit</button><div id="manageProductsList" style="margin-top:10px;max-height:55vh;overflow:auto"></div>`);renderManageProducts();$('#newProductBtn').onclick=()=>openProductEditor()};
+document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-product]');if(edit){openProductEditor(edit.dataset.editProduct);return}const del=e.target.closest('[data-delete-product]');if(del){const p=productById(del.dataset.deleteProduct);if(!p)return;if(confirm(`Voulez-vous supprimer le produit «${p.name}» ?`)){state.products=state.products.filter(x=>x.id!==p.id);state.cart=state.cart.filter(x=>x.id!==p.id);save();renderManageProducts();toast('Produit supprimé')}}});
+
+$('#printerChoice').addEventListener('change',()=>{const v=$('#printerChoice').value;if(v==='xprinter58'||v==='generic58')$('#receiptWidth').value='58';if(v==='generic80')$('#receiptWidth').value='80'});
+$('#saveSettings').onclick=()=>{state.settings.name=$('#businessName').value.trim()||'SOULYAS DRINKS PRO';state.settings.phone=$('#businessPhone').value.trim();state.settings.width=$('#receiptWidth').value;state.settings.printer=$('#printerChoice').value;state.settings.autoPrint=$('#autoPrint').checked;save();toast('Paramètres d’impression enregistrés')};
+$('#testPrint').onclick=()=>{const old=state.settings.autoPrint;state.settings.autoPrint=false;showReceipt({id:'TEST-58',date:stamp(),customerName:'Ticket de test',items:[{name:'Coca-Cola',size:'Canette 330 ml',qty:1,price:120}],total:120,paid:120});state.settings.autoPrint=old};
+function download(name,content,type='application/json'){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportData(){download('soulyas-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(state,null,2))}
+$('#exportBtn').onclick=exportData;$('#backupBtn').onclick=exportData;
+$('#importBtn').onclick=()=>$('#importFile').click();
+$('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!data.products||!data.sales||!data.customers)throw new Error();if(confirm('Les données actuelles seront remplacées par la sauvegarde. Voulez-vous continuer ?')){state=data;save();toast('Sauvegarde restaurée')}}catch(err){toast('Fichier de sauvegarde invalide')}e.target.value=''};
+$('#reportExport').onclick=()=>{const rows=[['N° ticket','Date','Client','Total','Encaissé','Reste à payer','Produits']];state.sales.forEach(s=>rows.push([s.id,new Date(s.date).toLocaleString('fr-DZ'),s.customerName,s.total,s.paid,s.total-s.paid,s.items.map(i=>`${i.name} x${i.qty}`).join(' | ')]));const csv='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');download('soulyas-ventes.csv',csv,'text/csv;charset=utf-8')};
+$('#helpBtn').onclick=()=>openModal('Aide rapide',`<div style="font-size:12px;line-height:2;color:#53665c"><b>1.</b> Ouvrez l’onglet Vente et appuyez sur + pour ajouter des produits.<br><b>2.</b> Sélectionnez un client, puis choisissez le mode de paiement.<br><b>3.</b> Dans Camion, créez une tournée et chargez les quantités exactes. Chaque vente déduit le stock de la tournée.<br><b>4.</b> Enregistrez les encaissements dans Créances.<br><b>5.</b> Exportez régulièrement une sauvegarde.<hr><b>Important :</b> L’impression Bluetooth dépend du modèle de l’imprimante et du navigateur Android. Le bouton Imprimer ouvre la fenêtre d’impression du navigateur ; une application intermédiaire peut être nécessaire.</div>`);
+// Payment option styling and initial boot
+document.addEventListener('change',e=>{if(e.target.matches('input[name="paymode"]'))$$('.pay-option').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked))});
+$('#todayLabel').textContent='📅 '+dateNow();
+renderAll();renderProducts();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+</script>
+</body>
+</html>

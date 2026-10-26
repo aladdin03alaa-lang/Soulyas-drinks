@@ -1,0 +1,38 @@
+SOULYAS DRINKS PRO — version PWA améliorée
+
+Nouveautés :
+- Interface réorganisée et libellés en français.
+- Parcours de vente simplifié : recherche, catégories, panier, quantités et paiement.
+- Gestion des tournées : chaque tournée demande un nom/secteur et les quantités de chaque boisson chargée.
+- Le stock du dépôt diminue lors du chargement d'une tournée.
+- Les ventes diminuent le stock de la tournée, sans modifier une deuxième fois le stock du dépôt.
+- À la clôture d'une tournée, les quantités invendues retournent au dépôt.
+- Une vente est impossible sans tournée active et sans quantité disponible dans le camion.
+- Cache PWA versionné pour forcer le renouvellement des fichiers.
+
+Installation / mise à jour :
+1. Décompresser l'archive.
+2. Publier le CONTENU du dossier sur l'hébergement HTTPS (les fichiers doivent être à la racine du site).
+3. Sur le téléphone, ouvrir le site dans Chrome puis Installer l'application / Ajouter à l'écran d'accueil.
+4. Pour une installation déjà existante, ouvrir le site en ligne, actualiser la page et, si l'ancienne interface reste affichée, fermer puis rouvrir l'application. Le service worker est versionné v3.
+
+Important : les données sont conservées dans le stockage local du navigateur. Elles ne sont pas synchronisées entre plusieurs appareils. Exportez une sauvegarde régulièrement.
+
+
+Correction des commandes (v6) :
+- Une commande se crée directement depuis l’écran Commandes : client, produits, quantités et total estimé. Il n’est plus nécessaire de remplir d’abord le panier de vente.
+- Créer une commande ne modifie aucun stock.
+- « Préparer la commande » transfère ses lignes dans le panier de vente et lie ce panier à la commande.
+- Une commande passe à « Livrée » uniquement après confirmation effective de la vente et déduction du stock du camion.
+- Une commande en attente ou en préparation peut être annulée sans modifier le stock.
+- Les commandes livrées/annulées n’affichent plus de bouton de préparation ; leur détail reste consultable.
+- Cache PWA mis à jour en v6.
+
+
+Correction ticket thermique et panier (v7) :
+- Le bouton « Retirer » dans le panier n'affiche plus que l'icône de suppression, avec une zone tactile de 34 x 34 px et un libellé accessible pour les lecteurs d'écran.
+- Ticket thermique compact : marges et espacements réduits, texte et lignes plus compacts, colonnes adaptées aux rouleaux 58 mm et 80 mm.
+- Ajout d'une règle d'impression sans marges ni hauteur fixe afin d'éviter les grandes zones blanches quand le pilote prend en charge le format continu.
+- Cache PWA renouvelé en v7.
+
+Conseil d'impression : dans le service d'impression Android / pilote Xprinter, choisissez le rouleau 58 mm (ou 80 mm) avec longueur continue/automatique si disponible, désactivez les en-têtes et pieds de page et évitez un format de page prédéfini très long. Le pilote peut imposer sa propre hauteur de papier malgré le CSS.

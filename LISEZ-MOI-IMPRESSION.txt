@@ -1,0 +1,11 @@
+SOULYAS DRINKS PRO — Configuration d'impression
+
+- Dans Plus > Paramètres et données, sélectionnez Xprinter XP-P801A — Bluetooth, 58 mm.
+- Laissez le format du ticket sur 58 mm.
+- Cochez « Imprimer automatiquement après la vente » puis enregistrez.
+- « Tester l'impression » ouvre un ticket de test.
+- Sur Android, connectez d'abord l'imprimante Bluetooth et installez/activez son service d'impression si disponible. Au premier lancement, Chrome/Android peut demander de choisir l'imprimante ou confirmer l'impression.
+
+Limite importante : une page HTML/PWA ne peut pas forcer directement la liaison Bluetooth ni garantir l'impression silencieuse. Le paramètre déclenche automatiquement la fenêtre d'impression du navigateur; sélectionnez la Xprinter dans Android si elle est disponible. Une application Android/SDK Xprinter est nécessaire pour une impression Bluetooth directe réellement sans dialogue.
+
+Les données de vente sont conservées dans le stockage local de l'application. Exportez une sauvegarde avant de remplacer les fichiers.

@@ -1,0 +1,21 @@
+SOULYAS DRINKS PRO — Installation sur Android comme une application
+
+IMPORTANT
+Cette version est une PWA (Progressive Web App). Pour que Chrome propose l'installation avec une icône et une ouverture sans barre d'adresse, les fichiers doivent être publiés sur une adresse HTTPS. Un fichier ouvert directement en content:// ou file:// ne peut pas être installé comme une PWA complète.
+
+ÉTAPE 1 — Publier les fichiers
+1. Décompressez cette archive sur un ordinateur.
+2. Publiez le CONTENU de ce dossier (index.html, manifest.json, sw.js, icons/) à la racine d'un hébergement HTTPS, par exemple GitHub Pages ou Netlify.
+3. Vérifiez que l'adresse du site commence par https:// et que index.html s'ouvre correctement.
+
+ÉTAPE 2 — Installer sur Android
+1. Sur le téléphone, ouvrez l'adresse HTTPS dans Google Chrome.
+2. Ouvrez le menu ⋮ de Chrome.
+3. Choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil » (le libellé dépend de Chrome).
+4. Confirmez. L'icône SOULYAS DRINKS PRO apparaîtra sur l'écran d'accueil.
+
+ÉTAPE 3 — Imprimante
+Dans l'application, ouvrez Plus > Paramètres et données, sélectionnez Xprinter XP-P801A et testez l'impression. Chrome/Android peut encore demander une confirmation d'impression. L'impression Bluetooth silencieuse nécessite une application ou un service Android compatible.
+
+DONNÉES
+Les données actuelles sont stockées localement dans le navigateur. Elles ne sont pas automatiquement synchronisées entre appareils. Avant de remplacer une version existante, exportez/sauvegardez vos données si l'application le permet.
