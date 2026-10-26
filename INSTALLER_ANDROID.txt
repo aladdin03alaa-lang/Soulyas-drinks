@@ -19,3 +19,15 @@ Dans l'application, ouvrez Plus > Paramètres et données, sélectionnez Xprinte
 
 DONNÉES
 Les données actuelles sont stockées localement dans le navigateur. Elles ne sont pas automatiquement synchronisées entre appareils. Avant de remplacer une version existante, exportez/sauvegardez vos données si l'application le permet.
+
+
+MODE PLEIN ÉCRAN ANDROID
+Le manifest.json est configuré avec display=fullscreen et display_override=[fullscreen, standalone]. Après mise à jour du site, supprimez l’ancienne application de l’écran d’accueil puis installez-la de nouveau depuis Chrome pour que le nouveau manifest soit pris en compte. Selon le navigateur et Android, certaines barres système peuvent rester visibles.
+
+
+MISE À JOUR PWA — MASQUER LA BARRE URL
+1. Publiez tout le contenu de ce dossier à la racine du site HTTPS, en conservant icons/, manifest.json, index.html et sw.js.
+2. Ouvrez le site dans Google Chrome Android. Utilisez le menu ⋮ > Installer l’application (pas seulement Ajouter à l’écran d’accueil).
+3. Lancez ensuite SOULYAS DRINKS PRO depuis son icône. Une page ouverte dans un onglet Chrome gardera toujours la barre URL.
+4. Si une ancienne version reste en cache, désinstallez l’ancienne PWA, ouvrez le site, rechargez-le, puis installez à nouveau.
+Note : une page web ne peut pas forcer Chrome à masquer sa barre URL lorsqu’elle est ouverte dans un onglet. Le mode standalone/fullscreen s’applique après installation PWA.

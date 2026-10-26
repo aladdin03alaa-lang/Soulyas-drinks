@@ -95,6 +95,11 @@ body{padding-bottom:86px} button,input,select{font:inherit} button{cursor:pointe
 .variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.variant{border:1px solid var(--line);border-radius:12px;padding:10px 5px;text-align:center;font-size:11px;background:white}.variant.active{border-color:var(--green);background:var(--mint);color:var(--green);font-weight:bold}
 hr{border:0;border-top:1px solid var(--line);margin:13px 0}
 @media(min-width:520px){body{padding-top:15px;padding-bottom:100px}.app{border-radius:25px;overflow:hidden;box-shadow:0 10px 40px #0b3e2612}.bottom-nav{bottom:15px;border:1px solid var(--line);border-radius:18px}.fab{bottom:103px;left:calc(50% - 244px)}}
+
+#pwaInstallBtn{position:fixed;z-index:99999;right:14px;bottom:96px;border:0;border-radius:999px;padding:12px 16px;background:#f39b35;color:#18332a;font-weight:800;box-shadow:0 6px 20px #0002;display:none}
+#pwaInstallBtn:focus-visible{outline:3px solid #086344;outline-offset:3px}
+@media (display-mode: standalone),(display-mode: fullscreen){#pwaInstallBtn{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -417,6 +422,35 @@ $('#helpBtn').onclick=()=>openModal('Aide rapide',`<div style="font-size:12px;li
 document.addEventListener('change',e=>{if(e.target.matches('input[name="paymode"]'))$$('.pay-option').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked))});
 $('#todayLabel').textContent='📅 '+dateNow();
 renderAll();renderProducts();
+
+// PWA installation: Chrome controls when installation is available.
+let deferredPwaInstallPrompt = null;
+const pwaInstallBtn = document.createElement('button');
+pwaInstallBtn.id = 'pwaInstallBtn';
+pwaInstallBtn.type = 'button';
+pwaInstallBtn.textContent = '⬇ Installer l’application';
+pwaInstallBtn.setAttribute('aria-label', 'Installer SOULYAS DRINKS PRO');
+document.body.appendChild(pwaInstallBtn);
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredPwaInstallPrompt = event;
+  pwaInstallBtn.style.display = 'block';
+});
+pwaInstallBtn.addEventListener('click', async () => {
+  if (!deferredPwaInstallPrompt) {
+    alert('Pour retirer la barre URL, ouvrez le menu ⋮ de Chrome puis choisissez « Installer l’application ». Si cette option n’apparaît pas, vérifiez que le site est publié en HTTPS et que le manifeste et le service worker sont accessibles.');
+    return;
+  }
+  deferredPwaInstallPrompt.prompt();
+  await deferredPwaInstallPrompt.userChoice;
+  deferredPwaInstallPrompt = null;
+  pwaInstallBtn.style.display = 'none';
+});
+window.addEventListener('appinstalled', () => {
+  pwaInstallBtn.style.display = 'none';
+  deferredPwaInstallPrompt = null;
+});
+
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 </script>
 </body>

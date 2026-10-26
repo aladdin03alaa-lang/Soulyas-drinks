@@ -1,4 +1,4 @@
-const CACHE_NAME = 'soulyas-drinks-pro-v8';
+const CACHE_NAME = 'soulyas-drinks-pro-v9';
 const APP_FILES = [
   "./",
   "./index.html",

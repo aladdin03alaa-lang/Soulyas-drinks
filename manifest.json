@@ -2,7 +2,7 @@
   "id": "./",
   "name": "SOULYAS DRINKS PRO",
   "short_name": "Soulyas Drinks",
-  "description": "Gestion professionnelle des ventes, clients, stocks et tournées de distribution de boissons",
+  "description": "Gestion professionnelle des ventes, clients, stocks et tournées de distribution de boissons. Mode plein écran Android.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -28,5 +28,9 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "display_override": [
+    "fullscreen",
+    "standalone"
   ]
 }
